@@ -6,4 +6,6 @@ sources:
     schema: GOOGLE_DRIVE
     tables: 
       - name: expenses
-      
+      - name: returns
+      - name: hr_joins
+      - name: hr_quits
