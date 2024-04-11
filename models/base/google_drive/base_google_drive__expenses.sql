@@ -1,0 +1,9 @@
+SELECT
+    _FILE,
+    _LINE,
+    _MODIFIED AS MODIFIED_TS,
+    _FIVETRAN_SYNCED AS FIVETRAN_SYNCED_TS,
+    DATE,
+    EXPENSE_TYPE,
+    CAST(REPLACE(EXPENSE_AMOUNT, '$', '') AS DECIMAL(10,2)) AS EXPENSE_AMOUNT
+FROM {{ source('google_drive', 'expenses') }}
