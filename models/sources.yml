@@ -12,7 +12,7 @@ sources:
 
   - name: web_schema
     database: LOAD
-    schema: WEB_SCHEMA
+    schema: SNOWFLAKE_DB_WEB_SCHEMA
     tables:
       - name: orders
       - name: sessions
