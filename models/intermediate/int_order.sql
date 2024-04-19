@@ -1,32 +1,26 @@
 WITH CleanedOrders AS (
     SELECT *,
-           ROW_NUMBER() OVER (PARTITION BY SESSION_ID ORDER BY ORDER_DATE_TS ASC) AS rn
+           ROW_NUMBER() OVER (PARTITION BY ORDER_ID ORDER BY ORDER_DATE_TS ASC) AS rn
     FROM {{ ref('base_web_schema__orders') }}
-),
-ItemCalculations AS (
-    SELECT 
-        SESSION_ID,
-        PRICE_PER_UNIT,
-        (SUM(ADD_TO_CART_QUANTITY) - SUM(REMOVE_FROM_CART_QUANTITY)) AS final_quantity,
-        SUM(PRICE_PER_UNIT * ADD_TO_CART_QUANTITY) AS total_added_price,
-        SUM(PRICE_PER_UNIT * REMOVE_FROM_CART_QUANTITY) AS total_removed_price
-    FROM {{ ref('base_web_schema__item_views') }}
-    GROUP BY SESSION_ID, PRICE_PER_UNIT
 )
-
 SELECT 
-    o.SESSION_ID,
+    o.ORDER_ID,
     o.CLIENT_NAME,
-    o.ORDER_DATE_TS,
     o.PAYMENT_METHOD,
+    o.PAYMENT_INFO,
+    o.ORDER_DATE_TS,
+    o.STATE,
     o.SHIPPING_ADDRESS,
-    o.PHONE,
-    ic.PRICE_PER_UNIT,
-    ic.final_quantity,
-    ic.total_added_price - ic.total_removed_price AS net_item_price,
     o.SHIPPING_COST,
     o.TAX_RATE,
-    (ic.total_added_price - ic.total_removed_price) * (1 + o.TAX_RATE) + o.SHIPPING_COST AS total_paid
-FROM CleanedOrders o
-JOIN ItemCalculations ic ON o.SESSION_ID = ic.SESSION_ID
-WHERE o.rn = 1
+    COUNT(DISTINCT iv.ITEM_NAME) AS TOTAL_ITEMS,
+    SUM(iv.PRICE_PER_UNIT * iv.ADD_TO_CART_QUANTITY) AS TOTAL_ORDER_VALUE,
+    SUM(iv.ADD_TO_CART_QUANTITY) AS TOTAL_UNITS
+FROM 
+    CleanedOrders o
+LEFT JOIN {{ ref('base_web_schema__item_views') }} iv ON o.SESSION_ID = iv.SESSION_ID
+WHERE 
+    o.rn = 1
+GROUP BY
+    o.ORDER_ID, o.CLIENT_NAME, o.PAYMENT_METHOD, o.PAYMENT_INFO, o.ORDER_DATE_TS, 
+    o.STATE, o.SHIPPING_ADDRESS, o.SHIPPING_COST, o.TAX_RATE
