@@ -129,6 +129,13 @@ models:
   - name: dim_expense
     description: "This table contains details of expenses including their types and amounts."
     columns:
+      - name: row_num
+        description: "The unique identifier of the table"
+        tests:
+          - not_null
+          - unique
+            
+
       - name: date
         description: "The date when the expense was recorded."
         tests:
