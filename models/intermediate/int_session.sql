@@ -5,7 +5,8 @@ WITH CleanedSessions AS (
     FROM {{ ref('base_web_schema__sessions') }}
 ),
 CleanedOrders AS (
-    SELECT *
+    SELECT *,
+            ROW_NUMBER() OVER (PARTITION BY SESSION_ID ORDER BY ORDER_DATE_TS ASC) AS rn
     FROM {{ ref('base_web_schema__orders') }}
 ),
 CleanedItemViews AS (
@@ -39,7 +40,7 @@ SELECT
 FROM 
     CleanedSessions cs
 LEFT JOIN CleanedPageViews cp ON cs.SESSION_ID = cp.SESSION_ID 
-LEFT JOIN CleanedOrders co ON cs.SESSION_ID = co.SESSION_ID
+LEFT JOIN CleanedOrders co ON cs.SESSION_ID = co.SESSION_ID AND co.rn = 1
 LEFT JOIN CleanedItemViews ci ON cs.SESSION_ID = ci.SESSION_ID
 WHERE 
     cs.rn = 1
