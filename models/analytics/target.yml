@@ -1,0 +1,275 @@
+version: 2
+
+models:
+  - name: daily_finances
+    description: "This table contains daily financial data for analytics."
+    columns:
+      - name: date
+        description: "The date for the daily financial record."
+        tests:
+          - not_null
+          - unique
+
+      - name: daily_employee_salary
+        description: "The total salary paid to employees for the day."
+        tests:
+          - not_null
+
+      - name: daily_expense
+        description: "The total expenses for the day."
+        tests:
+          - not_null
+
+      - name: daily_refunds
+        description: "The total amount refunded to customers for the day."
+        tests:
+          - not_null
+
+      - name: daily_revenue
+        description: "The total revenue generated for the day."
+        tests:
+          - not_null
+
+      - name: profit
+        description: "The profit for the day, calculated as revenue minus expenses and refunds."
+        tests:
+          - not_null
+
+  - name: dim_client
+    description: "This table contains dimensions related to clients."
+    columns:
+      - name: client_id
+        description: "The unique identifier for a client."
+        tests:
+          - unique
+          - not_null
+
+      - name: client_name
+        description: "The name of the client."
+        tests:
+          - not_null
+
+      - name: ip
+        description: "The IP address associated with the client's activity."
+        tests:
+          - not_null
+
+      - name: os
+        description: "The operating system used by the client."
+        tests:
+          - not_null
+
+      - name: payment_info
+        description: "Payment information for the client."
+        tests:
+          - not_null
+
+      - name: payment_method
+        description: "The payment method chosen by the client."
+        tests:
+          - not_null
+
+      - name: phone
+        description: "The phone number of the client."
+        tests:
+          - not_null
+
+      - name: shipping_address
+        description: "The shipping address provided by the client."
+        tests:
+          - not_null
+
+      - name: state
+        description: "The state of the client's account or interaction."
+        tests:
+          - not_null
+
+  - name: dim_employee
+    description: "This table contains employee dimension data, including personal and employment details."
+    columns:
+      - name: address
+        description: "The residential address of the employee."
+        tests:
+          - not_null
+
+      - name: annual_salary
+        description: "The yearly salary of the employee."
+        tests:
+          - not_null
+
+      - name: city
+        description: "The city part of the employee's address."
+        tests:
+          - not_null
+
+      - name: employee_id
+        description: "The unique identifier for the employee."
+        tests:
+          - unique
+          - not_null
+
+      - name: hire_date
+        description: "The date when the employee was hired."
+        tests:
+          - not_null
+
+      - name: name
+        description: "The full name of the employee."
+        tests:
+          - not_null
+
+      - name: quit_date
+        description: "The date when the employee quit. This can be null if the employee is currently employed."
+
+      - name: title
+        description: "The job title of the employee."
+        tests:
+          - not_null
+
+  - name: dim_expense
+    description: "This table contains details of expenses including their types and amounts."
+    columns:
+      - name: date
+        description: "The date when the expense was recorded."
+        tests:
+          - not_null
+
+      - name: expense_type
+        description: "The category or type of the expense."
+        tests:
+          - not_null
+
+      - name: total_amount
+        description: "The total amount of the expense."
+        tests:
+          - not_null
+
+  - name: dim_item
+    description: "This table contains information on items including their names and price history."
+    columns:
+      - name: item_name
+        description: "The name of the item."
+        tests:
+          - not_null
+          - unique
+
+      - name: price_array
+        description: "An array of prices for the item, possibly reflecting different prices over time or variations in price by region."
+        tests:
+          - not_null
+
+  - name: fact_order
+    description: "This table records transactional order data, including details about clients, orders, payments, and shipping."
+    columns:
+      - name: client_name
+        description: "The name of the client who made the order."
+        tests:
+          - not_null
+
+      - name: order_date_ts
+        description: "The timestamp of when the order was placed."
+        tests:
+          - not_null
+
+      - name: order_id
+        description: "The unique identifier for the order."
+        tests:
+          - unique
+          - not_null
+
+      - name: payment_info
+        description: "Encrypted payment information for the order."
+        tests:
+          - not_null
+
+      - name: payment_method
+        description: "The payment method used for the order."
+        tests:
+          - not_null
+
+      - name: shipping_address
+        description: "The address where the order is to be shipped."
+        tests:
+          - not_null
+
+      - name: shipping_cost
+        description: "The cost of shipping for the order."
+        tests:
+          - not_null
+
+      - name: state
+        description: "The current state or status of the order."
+        tests:
+          - not_null
+
+      - name: tax_rate
+        description: "The tax rate applied to the order."
+        tests:
+          - not_null
+
+      - name: total_items
+        description: "The total number of unique items in the order."
+        tests:
+          - not_null
+
+      - name: total_order_value
+        description: "The total monetary value of the order."
+        tests:
+          - not_null
+
+      - name: total_units
+        description: "The total number of units across all items in the order."
+        tests:
+          - not_null
+
+  - name: fact_session
+    description: "This table tracks individual user sessions, including activities such as items added or removed, pages visited, and any orders placed."
+    columns:
+      - name: client_id
+        description: "The identifier for the client."
+        tests:
+          - not_null
+
+      - name: ip
+        description: "The IP address of the client for the session."
+        tests:
+          - not_null
+
+      - name: items_added
+        description: "The number of items added to the cart during the session."
+
+      - name: items_removed
+        description: "The number of items removed from the cart during the session."
+
+      - name: item_viewed
+        description: "The identifier for the item that was viewed during the session."
+
+      - name: order_id
+        description: "The unique identifier for an order placed during the session, if any."
+
+      - name: order_placed
+        description: "Indicates whether an order was placed during the session (e.g., 1 for yes, 0 for no)."
+        tests:
+          - not_null
+
+      - name: os
+        description: "The operating system used by the client during the session."
+        tests:
+          - not_null
+
+      - name: page_visited
+        description: "The identifier for the page visited during the session."
+
+      - name: payment_method_used
+        description: "The payment method used if an order was placed during the session."
+
+      - name: session_id
+        description: "The unique identifier for the session."
+        tests:
+          - not_null
+          - unique
+
+      - name: session_time_ts
+        description: "The timestamp marking the start of the session."
+        tests:
+          - not_null
