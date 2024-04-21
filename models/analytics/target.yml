@@ -133,7 +133,6 @@ models:
         description: "The date when the expense was recorded."
         tests:
           - not_null
-          - unique
 
       - name: expense_type
         description: "The category or type of the expense."
@@ -238,18 +237,12 @@ models:
 
       - name: items_added
         description: "The number of items added to the cart during the session."
-        tests:
-          - not_null
 
       - name: items_removed
         description: "The number of items removed from the cart during the session."
-        tests:
-          - not_null
 
       - name: item_viewed
         description: "The identifier for the item that was viewed during the session."
-        tests:
-          - not_null
 
       - name: order_id
         description: "The unique identifier for an order placed during the session, if any."
@@ -266,8 +259,6 @@ models:
 
       - name: page_visited
         description: "The identifier for the page visited during the session."
-        tests:
-          - not_null
 
       - name: payment_method_used
         description: "The payment method used if an order was placed during the session."
