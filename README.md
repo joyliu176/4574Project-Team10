@@ -17,7 +17,7 @@ The goal of this project is to automate the data flow from storage to visualizat
 - **Data Storage:** Google Drive
 - **Data Warehouse:** Snowflake
 - **Data Transformation:** dbt Cloud
-- **Dashboarding Tool:** Preset (Apache Superset)
+- **Dashboarding Tool:** Preset
 
 ---
 
