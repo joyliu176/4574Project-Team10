@@ -33,13 +33,13 @@ The first step involves extracting raw data stored in Google Drive and importing
 ### Step 2: Data Cleaning and Transformation in Snowflake
 Within Snowflake, we:
 - Perform data cleaning to handle missing or inconsistent values.
-- Create fact and intermediate tables following a star schema design to optimize data querying.
+- Create base and intermediate tables following a star schema design to optimize data querying.
 
 **Tools:**
 - Snowflake SQL scripts
 
 ### Step 3: Final Edits with dbt Cloud
-Intermediate tables are exported to dbt Cloud for advanced data transformations. The final output consists of dim tables, which are designed for end-user reporting and analysis.
+Intermediate tables are exported to dbt Cloud for advanced data transformations. The final output consists of dim and facts tables, which are designed for end-user reporting and analysis.
 
 **Tools:**
 - dbt Cloud
